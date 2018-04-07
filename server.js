@@ -20,7 +20,8 @@ var app = express();
 // Use morgan logger for logging requests
 app.use(logger("dev"));
 // Use body-parser for handling form submissions
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
 
@@ -30,19 +31,20 @@ app.engine('handlebars', exphbs({defaultLayout: "main"}));
 app.set('view engine', 'handlebars');
 
 // Connect to the Mongo DB
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoScraper";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/smashingMagScraper";
 mongoose.Promoise = Promise;
 
 mongoose.connect(MONGODB_URI, function(err) {
   if(err) {
     console.log(err);
   } else {
-    conosle.log("Working!");
+    console.log("Working!");
   }
 });
 
 // Routes
 require("./routes/api/api-routes.js")(app)
+// require("./routes/view/html-routes.js")(app)
 
 // Start the server
 app.listen(PORT, function() {
